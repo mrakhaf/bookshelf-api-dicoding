@@ -39,7 +39,7 @@ const routes = [
         handler: getBookByIdHandler
     },
     {
-        method: 'POST',
+        method: 'PUT',
         path: '/books/{id}',
         handler: editBookByIdHandler
     },

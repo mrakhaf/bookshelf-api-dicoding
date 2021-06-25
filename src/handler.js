@@ -7,13 +7,14 @@ const saveBooksHandler = (request, h) => {
     const insertedAt = new Date().toISOString();
     const updatedAt = insertedAt;
 
-    const newBook = {
-        id, name, year, author, summary, publisher, pageCount, readPage, reading, insertedAt, updatedAt
-    }
-
-    const nameValidation = name === "";
+    const nameValidation = (name === "") || (name === undefined);
     const readPageValidation = readPage > pageCount;
+    const finished = readPage === pageCount;
     const isSuccess = (nameValidation === false) && (readPageValidation === false)
+
+    const newBook = {
+        id, name, year, author, summary, publisher, pageCount, readPage, reading, insertedAt, updatedAt, finished
+    }
 
     if (isSuccess) {
         books.push(newBook);
@@ -54,9 +55,31 @@ const saveBooksHandler = (request, h) => {
     return response;
 }
 
+// const getAllBooksHandler = (response, h) => {
+//     const bookItems = books.map(book => {
+//         const {id, name, publisher} = book
+//         return {id, name, publisher}
+//     })
+
+//     const response = h.response({
+//         status: 'success',
+//         data: {
+//             books: bookItems
+//         }
+//     });
+//     response.code(200);
+//     return response;
+// }
+
 const getAllBooksHandler = () => ({
     status: "success",
-    data: books
+    data: {
+        books: books.map(book => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher
+        }))
+    }
 })
 
 const getBookByIdHandler = (request, h) => {
@@ -66,9 +89,7 @@ const getBookByIdHandler = (request, h) => {
     if (book !== undefined){
         return {
             status: 'success',
-            data: {
-              book,
-            },
+            data: book
         }
     }
 
@@ -86,7 +107,7 @@ const editBookByIdHandler = (request, h) => {
     const updatedAt = new Date().toISOString();
     const index = books.findIndex((book) => book.id === id);
 
-    const nameValidation = name === "";
+    const nameValidation = (name === "") || (name === undefined);
     const readPageValidation = readPage > pageCount;
     const isSuccess = (nameValidation === false) && (readPageValidation === false)
 
