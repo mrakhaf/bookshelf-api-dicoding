@@ -89,7 +89,9 @@ const getBookByIdHandler = (request, h) => {
     if (book !== undefined){
         return {
             status: 'success',
-            data: book
+            data: {
+                book: book
+            }
         }
     }
 
